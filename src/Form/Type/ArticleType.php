@@ -15,8 +15,7 @@ class ArticleType extends AbstractType
     {
         $builder
             ->add('title', TextType::class)
-            ->add('content', TextareaType::class)
-            ->add('publied', CheckboxType::class);
+            ->add('content', TextareaType::class);
     }
 
     public function getName()
