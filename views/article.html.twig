@@ -1,0 +1,228 @@
+{% extends "layout.html.twig" %}
+
+{% block title %}{{ article.title }}{% endblock %}
+
+{% block content %}
+<p>
+    <h2>{{ article.title }}</h2>
+    <p class="date">{{ article.getArticleDate() }}</p>
+    <p>{{ article.content | raw }}</p>
+
+
+
+<h3>Commentaires</h3>
+
+{% for flashMessage in app.session.flashbag.get('success') %}
+<div class="alert alert-success">
+    {{ flashMessage }}
+</div>
+{% endfor %}
+
+{% if comments is empty %} 
+    Soyez la première personne a commenter ! 
+{% else %}
+{% for comment in comments %}
+{% if comment.childOf == 0 %}
+    <div class="parent comment">
+    <p class="com"><strong class="pseudo">{{ comment.author.username }}</strong> à dit le {{ comment.getcommentDate() }} : {{ comment.content }} 
+        {% if is_granted('IS_AUTHENTICATED_FULLY')  and (comment.getReports('reportedBy', user.id) == false) %} 
+            <a href="/comment/{{ comment.id }}/report" class="link"> Signaler</a>
+        {% endif %}
+        {% if comment.getReports('reportedBy', user.id) %} 
+            <a href="/comment/{{ comment.id }}/cancel-report" class="link"> Annuler mon signalement</a>
+        {% endif %}
+    </p>
+    
+        {% if reponseForm %}
+            <div class="answer_panel">
+                <button type="button" class="btn btn-xs" data-toggle="collapse" data-target="#resp{{ comment.id }}">Répondre</button>
+            </div>
+            
+            {{ form_start(reponseForm) }}
+            <div class="collapse" id="resp{{ comment.id }}">
+                <div class="response">
+                    <div class="form-group">
+                        {{ reponseForm.content.resetRendered() }}
+
+                        {{ form_errors(reponseForm.content) }}
+                        {{ form_widget(reponseForm.content, { 'attr':  {
+                            'rows': '1',
+                            'class': 'form-control form-article',
+                            'placeholder': 'Entrez votre réponse'
+                        }}) }}
+                    </div>
+                    <div class="form-group" style="display:none">
+
+                        <input type="text" id="reponse_childOf" name="reponse[childOf]" required="required" value="{{ comment.id }}">
+
+                        <!-- {{ form_errors(reponseForm.childOf) }}
+                        {{ form_widget(reponseForm.childOf, { 'attr':  {
+                            'value': '' ~comment.id,
+                            'style': 'display:none'
+                        }}) }} -->
+                    </div>
+                    <div class="form-group">
+                        <input type="submit" class="btn btn-primary btn-md" value="Publier" />
+                    </div>
+                </div>
+            </div>
+            {{ form_end(reponseForm) }}
+        {% else %}
+            <a href="{{ path('login') }} ">Log in</a> to add comments.
+        {% endif %}
+    
+        {% if comment.getParentOf('array') != [] %}
+        <!----------------------------------------------- first level ----------------------------------------------------------->
+        <div class="child_I comment">
+            {% for childComment in comment.getParentOf('array') %}
+            <p class="com"><strong class="pseudo">{{ childComment.author.username }}</strong> à dit le {{ childComment.getcommentDate() }} : {{ childComment.content }} 
+                {% if is_granted('IS_AUTHENTICATED_FULLY') and (childComment.getReports('reportedBy', user.id) == false) %} 
+                    <a href="/comment/{{ childComment.id }}/report" class="link"> Signaler</a>
+                {% endif %}
+                {% if childComment.getReports('reportedBy', user.id) %} 
+                    <a href="/comment/{{ childComment.id }}/cancel-report" class="link"> Annuler mon signalement</a>
+                {% endif %}</p>
+            
+            {% if reponseForm %}
+                <div class="answer_panel">
+                    <button type="button" class="btn btn-xs" data-toggle="collapse" data-target="#resp{{ childComment.id }}">Répondre</button>
+                </div>
+                    
+                {{ form_start(reponseForm) }}
+                <div class="collapse" id="resp{{ childComment.id }}">
+                    <div class="response">
+                        <div class="form-group">
+                            {{ reponseForm.content.resetRendered() }}
+
+                            {{ form_errors(reponseForm.content) }}
+                            {{ form_widget(reponseForm.content, { 'attr':  {
+                                'rows': '1',
+                                'class': 'form-control form-article',
+                                'placeholder': 'Entrez votre réponse'
+                            }}) }}
+                        </div>
+                        <div class="form-group" style="display:none">
+
+                            <input type="text" id="reponse_childOf" name="reponse[childOf]" required="required" value="{{ childComment.id }}">
+
+                            <!-- {{ form_errors(reponseForm.childOf) }}
+                            {{ form_widget(reponseForm.childOf, { 'attr':  {
+                                'value': '' ~comment.id,
+                                'style': 'display:none'
+                            }}) }} -->
+                        </div>
+                        <div class="form-group">
+                            <input type="submit" class="btn btn-primary btn-md" value="Publier" />
+                        </div>
+                    </div>
+                </div>
+                {{ form_end(reponseForm) }}
+            {% else %}
+                <a href="{{ path('login') }} ">Log in</a> to add comments.
+            {% endif %}
+
+            {% if childComment.getParentOf('array') != [] %}
+            <!------------------------------------------- second level ---------------------------------------------------------->
+            <div class="child_II comment">
+
+                {% for childCommentII in childComment.getParentOf('array') %}
+                <p class="com"><strong class="pseudo">{{ childCommentII.author.username }}</strong> à dit le {{ childCommentII.getcommentDate() }} : {{ childCommentII.content }} 
+                {% if is_granted('IS_AUTHENTICATED_FULLY') and (childCommentII.getReports('reportedBy', user.id) == false) %} 
+                    <a href="/comment/{{ childCommentII.id }}/report" class="link"> Signaler</a>
+                {% endif %}
+                {% if childCommentII.getReports('reportedBy', user.id) %} 
+                    <a href="/comment/{{ childCommentII.id }}/cancel-report" class="link"> Annuler mon signalement</a>
+                {% endif %}</p> 
+                
+                {% if reponseForm %}
+                    <div class="answer_panel">
+                        <button type="button" class="btn btn-xs" data-toggle="collapse" data-target="#resp{{ childCommentII.id }}">Répondre</button>
+                    </div>
+                    
+                    {{ form_start(reponseForm) }}
+                    <div class="collapse" id="resp{{ childCommentII.id }}">
+                        <div class="response">
+                            <div class="form-group">
+                                {{ reponseForm.content.resetRendered() }}
+
+                                {{ form_errors(reponseForm.content) }}
+                                {{ form_widget(reponseForm.content, { 'attr':  {
+                                    'rows': '1',
+                                    'class': 'form-control form-article',
+                                    'placeholder': 'Entrez votre réponse'
+                                }}) }}
+                            </div>
+                            <div class="form-group" style="display:none">
+
+                                <input type="text" id="reponse_childOf" name="reponse[childOf]" required="required" value="{{ childCommentII.id }}">
+
+                                <!-- {{ form_errors(reponseForm.childOf) }}
+                                {{ form_widget(reponseForm.childOf, { 'attr':  {
+                                    'value': '' ~comment.id,
+                                    'style': 'display:none'
+                                }}) }} -->
+                            </div>
+                            <div class="form-group">
+                                <input type="submit" class="btn btn-primary btn-md" value="Publier" />
+                            </div>
+                        </div>
+                    </div>
+                    {{ form_end(reponseForm) }}
+                {% else %}
+                    <a href="{{ path('login') }} ">Log in</a> to add comments.
+                {% endif %}
+                
+                {% if childComment.getParentOf('array') != [] %}
+                <!--------------------------------------- third level ---------------------------------------------------------->
+                    {% for childCommentIII in childCommentII.getParentOf('array') %}
+                        <div class="child_III comment">
+                        <p class="com"><strong class="pseudo">{{ childCommentIII.author.username }}</strong> à dit le {{ childCommentIII.getCommentDate() }} : {{ childCommentIII.content }} 
+                            {% if is_granted('IS_AUTHENTICATED_FULLY') and (childCommentIII.getReports('reportedBy', user.id) == false) %} 
+                                <a href="/comment/{{ childCommentIII.id }}/report" class="link"> Signaler</a>
+                            {% endif %}
+                            {% if childCommentIII.getReports('reportedBy', user.id) %} 
+                                <a href="/comment/{{ childCommentIII.id }}/cancel-report" class="link"> Annuler mon signalement</a>
+                            {% endif %}</p>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                {% endif %} 
+                {% endfor %}
+            </div>
+            {% else %}
+            {% endif %}
+            {% endfor %}
+        </div>
+        {% endif %}
+        </div>
+{% endif %}    
+{% endfor %}
+{% endif %}
+
+
+
+
+    <h3>Ajoutez un commentaire</h3>
+    {% if commentForm %}
+        {{ form_start(commentForm) }}
+            <div class="form-group">
+                {{ form_errors(commentForm.content) }}
+                {{ form_widget(commentForm.content, { 'attr':  {
+                    'rows': '4',
+                    'class': 'form-control form-articles',
+                    'placeholder': 'Entrez votre comentaire'
+                }}) }}
+            </div>
+            <div class="form-group">
+                <input type="submit" class="btn btn-primary btn-md" value="Publier" />
+            </div>
+        {{ form_end(commentForm) }}
+    {% else %}
+        <a href="{{ path('login') }} ">Connectez-vous</a> pour ajouter un commentaire.
+    {% endif %}
+</p>
+
+<script type="text/javascript" src="{{ asset('/js/postRendering.js') }}"></script>
+{% endblock %}
+
+
