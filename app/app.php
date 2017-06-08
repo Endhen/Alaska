@@ -64,7 +64,7 @@ $app['dao.comment'] = function ($app) {
     return $commentDAO;
 };
 
-
+/*
 // Register error handler
 $app->error(function (\Exception $e, Request $request, $code) use ($app) {
     switch ($code) {
@@ -78,7 +78,7 @@ $app->error(function (\Exception $e, Request $request, $code) use ($app) {
             $message = "Something went wrong.";
     }
     return $app['twig']->render('error.html.twig', array('message' => $message));
-});
+});*/
 
 // Register JSON data decoder for JSON requests
 $app->before(function (Request $request) {

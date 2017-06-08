@@ -41,15 +41,16 @@ class AdminController {
     public function addArticleAction(Request $request, Application $app) {
         $article = new Article();
         $article->setArticleDate(strftime('%A %d %B %Y, %H:%M'));
+        $article->setPublied(1);
         $articleForm = $app['form.factory']->create(ArticleType::class, $article);
         $articleForm->handleRequest($request);
         
         if ($articleForm->isSubmitted() && $articleForm->isValid()) {
             $app['dao.article']->save($article);
-            $app['session']->getFlashBag()->add('success', 'The article was successfully created.');
+            $app['session']->getFlashBag()->add('success', 'L\'article a bien été créé.');
         }
         return $app['twig']->render('article_form.html.twig', array(
-            'title' => 'New article',
+            'title' => 'Nouvel article',
             'articleForm' => $articleForm->createView()));
     }
     
@@ -67,10 +68,10 @@ class AdminController {
         
         if ($articleForm->isSubmitted() && $articleForm->isValid()) {
             $app['dao.article']->save($article, false);
-            $app['session']->getFlashBag()->add('success', 'The article was successfully created.');
+            $app['session']->getFlashBag()->add('success', 'L\'article a été créé.');
         }
         return $app['twig']->render('article_form.html.twig', array(
-            'title' => 'New article',
+            'title' => 'Nouvel article',
             'articleForm' => $articleForm->createView()));
     }
 
@@ -88,10 +89,10 @@ class AdminController {
         
         if ($articleForm->isSubmitted() && $articleForm->isValid()) {
             $app['dao.article']->save($article);
-            $app['session']->getFlashBag()->add('success', 'The article was successfully updated.');
+            $app['session']->getFlashBag()->add('success', 'L\'article a bien été mis a jour.');
         }
         return $app['twig']->render('article_form.html.twig', array(
-            'title' => 'Edit article',
+            'title' => 'Editer un article',
             'articleForm' => $articleForm->createView()));
     }
 
@@ -106,7 +107,7 @@ class AdminController {
         $app['dao.comment']->deleteAllByArticle($id);
         // Delete the article
         $app['dao.article']->delete($id);
-        $app['session']->getFlashBag()->add('success', 'The article was successfully removed.');
+        $app['session']->getFlashBag()->add('success', 'L\'article a bien été supprimé.');
         // Redirect to admin home page
         return $app->redirect($app['url_generator']->generate('admin'));
     }
@@ -124,10 +125,10 @@ class AdminController {
         $commentForm->handleRequest($request);
         if ($commentForm->isSubmitted() && $commentForm->isValid()) {
             $app['dao.comment']->save($comment);
-            $app['session']->getFlashBag()->add('success', 'The comment was successfully updated.');
+            $app['session']->getFlashBag()->add('success', 'Le commentaire a bien été mis a jour.');
         }
         return $app['twig']->render('comment_form.html.twig', array(
-            'title' => 'Edit comment',
+            'title' => 'Editer un commentaire',
             'commentForm' => $commentForm->createView()));
     }
 
@@ -140,7 +141,7 @@ class AdminController {
     public function deleteCommentAction($id, Application $app) {
         
         $app['dao.comment']->delete($id);
-        $app['session']->getFlashBag()->add('success', 'The comment was successfully removed.');
+        $app['session']->getFlashBag()->add('success', 'Le commentaire a bien été supprimé.');
         // Redirect to admin home page
         return $app->redirect($app['url_generator']->generate('admin'));
     }
@@ -166,10 +167,10 @@ class AdminController {
             $password = $encoder->encodePassword($plainPassword, $user->getSalt());
             $user->setPassword($password); 
             $app['dao.user']->save($user);
-            $app['session']->getFlashBag()->add('success', 'The user was successfully created.');
+            $app['session']->getFlashBag()->add('success', 'L\'utilisateur a bien été créé.');
         }
         return $app['twig']->render('user_form.html.twig', array(
-            'title' => 'New user',
+            'title' => 'Nouvel utilisateur',
             'userForm' => $userForm->createView()));
     }
 
@@ -192,10 +193,10 @@ class AdminController {
             $password = $encoder->encodePassword($plainPassword, $user->getSalt());
             $user->setPassword($password); 
             $app['dao.user']->save($user);
-            $app['session']->getFlashBag()->add('success', 'The user was successfully updated.');
+            $app['session']->getFlashBag()->add('success', 'L\'utilisateur a bien été mis a jour.');
         }
         return $app['twig']->render('user_form.html.twig', array(
-            'title' => 'Edit user',
+            'title' => 'Editer un utilisateur',
             'userForm' => $userForm->createView()));
     }
 
@@ -210,7 +211,7 @@ class AdminController {
         $app['dao.comment']->deleteAllByUser($id);
         // Delete the user
         $app['dao.user']->delete($id);
-        $app['session']->getFlashBag()->add('success', 'The user was successfully removed.');
+        $app['session']->getFlashBag()->add('success', 'L\'utilisateur a bien été supprimé.');
         // Redirect to admin home page
         return $app->redirect($app['url_generator']->generate('admin'));
     }

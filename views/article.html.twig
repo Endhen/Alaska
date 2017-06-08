@@ -27,9 +27,10 @@
     <p class="com"><strong class="pseudo">{{ comment.author.username }}</strong> à dit le {{ comment.getcommentDate() }} : {{ comment.content }} 
         {% if is_granted('IS_AUTHENTICATED_FULLY')  and (comment.getReports('reportedBy', user.id) == false) %} 
             <a href="/comment/{{ comment.id }}/report" class="link"> Signaler</a>
-        {% endif %}
-        {% if comment.getReports('reportedBy', user.id) %} 
-            <a href="/comment/{{ comment.id }}/cancel-report" class="link"> Annuler mon signalement</a>
+        
+            {% if comment.getReports('reportedBy', user.id) %} 
+                <a href="/comment/{{ comment.id }}/cancel-report" class="link"> Annuler mon signalement</a>
+            {% endif %}
         {% endif %}
     </p>
     
@@ -68,7 +69,7 @@
             </div>
             {{ form_end(reponseForm) }}
         {% else %}
-            <a href="{{ path('login') }} ">Log in</a> to add comments.
+            <a href="{{ path('login') }} ">Connectez-vous </a> pour ajouter un commentaire.
         {% endif %}
     
         {% if comment.getParentOf('array') != [] %}
@@ -78,10 +79,12 @@
             <p class="com"><strong class="pseudo">{{ childComment.author.username }}</strong> à dit le {{ childComment.getcommentDate() }} : {{ childComment.content }} 
                 {% if is_granted('IS_AUTHENTICATED_FULLY') and (childComment.getReports('reportedBy', user.id) == false) %} 
                     <a href="/comment/{{ childComment.id }}/report" class="link"> Signaler</a>
+                
+                    {% if childComment.getReports('reportedBy', user.id) %} 
+                        <a href="/comment/{{ childComment.id }}/cancel-report" class="link"> Annuler mon signalement</a>
+                    {% endif %}
                 {% endif %}
-                {% if childComment.getReports('reportedBy', user.id) %} 
-                    <a href="/comment/{{ childComment.id }}/cancel-report" class="link"> Annuler mon signalement</a>
-                {% endif %}</p>
+            </p>
             
             {% if reponseForm %}
                 <div class="answer_panel">
@@ -118,7 +121,7 @@
                 </div>
                 {{ form_end(reponseForm) }}
             {% else %}
-                <a href="{{ path('login') }} ">Log in</a> to add comments.
+                <a href="{{ path('login') }} ">Connectez-vous </a> pour ajouter un commentaire.
             {% endif %}
 
             {% if childComment.getParentOf('array') != [] %}
@@ -127,12 +130,14 @@
 
                 {% for childCommentII in childComment.getParentOf('array') %}
                 <p class="com"><strong class="pseudo">{{ childCommentII.author.username }}</strong> à dit le {{ childCommentII.getcommentDate() }} : {{ childCommentII.content }} 
-                {% if is_granted('IS_AUTHENTICATED_FULLY') and (childCommentII.getReports('reportedBy', user.id) == false) %} 
-                    <a href="/comment/{{ childCommentII.id }}/report" class="link"> Signaler</a>
-                {% endif %}
-                {% if childCommentII.getReports('reportedBy', user.id) %} 
-                    <a href="/comment/{{ childCommentII.id }}/cancel-report" class="link"> Annuler mon signalement</a>
-                {% endif %}</p> 
+                    {% if is_granted('IS_AUTHENTICATED_FULLY') and (childCommentII.getReports('reportedBy', user.id) == false) %} 
+                        <a href="/comment/{{ childCommentII.id }}/report" class="link"> Signaler</a>
+
+                        {% if childCommentII.getReports('reportedBy', user.id) %} 
+                            <a href="/comment/{{ childCommentII.id }}/cancel-report" class="link"> Annuler mon signalement</a>
+                        {% endif %}
+                    {% endif %}
+                </p> 
                 
                 {% if reponseForm %}
                     <div class="answer_panel">
@@ -169,7 +174,7 @@
                     </div>
                     {{ form_end(reponseForm) }}
                 {% else %}
-                    <a href="{{ path('login') }} ">Log in</a> to add comments.
+                    <a href="{{ path('login') }} ">Connectez-vous </a> pour ajouter un commentaire.
                 {% endif %}
                 
                 {% if childComment.getParentOf('array') != [] %}
@@ -179,10 +184,12 @@
                         <p class="com"><strong class="pseudo">{{ childCommentIII.author.username }}</strong> à dit le {{ childCommentIII.getCommentDate() }} : {{ childCommentIII.content }} 
                             {% if is_granted('IS_AUTHENTICATED_FULLY') and (childCommentIII.getReports('reportedBy', user.id) == false) %} 
                                 <a href="/comment/{{ childCommentIII.id }}/report" class="link"> Signaler</a>
+                            
+                                {% if childCommentIII.getReports('reportedBy', user.id) %} 
+                                    <a href="/comment/{{ childCommentIII.id }}/cancel-report" class="link"> Annuler mon signalement</a>
+                                {% endif %}
                             {% endif %}
-                            {% if childCommentIII.getReports('reportedBy', user.id) %} 
-                                <a href="/comment/{{ childCommentIII.id }}/cancel-report" class="link"> Annuler mon signalement</a>
-                            {% endif %}</p>
+                        </p>
                         </div>
                     {% endfor %}
                 {% else %}

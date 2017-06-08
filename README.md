@@ -1,5 +1,7 @@
-# OC-MicroCMS
+# OC-Projet 3
 
-Support du cours OpenClassrooms "Evoluer vers une architecture PHP professionnelle".
 
-Itération 13 : réorganisation des contrôleurs.
+
+Option : Copier le contenu de du fichier /bonus dans le repertoire racine pour activer la fonctionnalité de brouillon.
+
+

@@ -42,7 +42,6 @@ class HomeController {
             $reponse
                 ->setArticle($article)
                 ->setAuthor($user)
-                ->setParentOf(NULL)
                 ->setReports('as', NULL)
                 ->setCommentDate(date("d/m/Y à H:i"));
             
@@ -81,13 +80,13 @@ class HomeController {
                 $parent->setParentOf($childArray);
                 
                 $app['dao.comment']->save($parent);
-                $app['session']->getFlashBag()->add('success', 'Your comment was successfully added.');
+                $app['session']->getFlashBag()->add('success', 'Votre réponse a bien été ajouté.');
                 
             }
             
             if ($commentForm->isSubmitted() && $commentForm->isValid()) {
                 $app['dao.comment']->save($comment);
-                $app['session']->getFlashBag()->add('success', 'Your comment was successfully added.');
+                $app['session']->getFlashBag()->add('success', 'Votre commentaire a bien été ajouté.');
             }
             
             $reponseFormView = $reponseForm->createView();
