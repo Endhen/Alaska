@@ -37,7 +37,11 @@ class Article
      *
      * @var boolean
      */
-    private $publied;
+    private $publied = true;
+    
+    function __contruct() {
+        $this->setArticleDate(utf8_encode(strftime('%A %d %B %Y, %H:%M')));
+    }
 
     public function getId() {
         return $this->id;

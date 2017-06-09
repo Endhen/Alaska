@@ -27,5 +27,5 @@ class NotBlank extends Constraint
         self::IS_BLANK_ERROR => 'IS_BLANK_ERROR',
     );
 
-    public $message = 'This value should not be blank.';
+    public $message = 'Ce champ ne peut pas être vide.';
 }

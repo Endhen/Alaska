@@ -51,8 +51,12 @@ $app->get('/comment/{id}/cancel-report', "MicroCMS\Controller\HomeController::ca
 
 
 // Add a user
-$app->match('/admin/user/add', "MicroCMS\Controller\AdminController::addUserAction")
+$app->match('admin/user/add', "MicroCMS\Controller\AdminController::addUserAction")
 ->bind('admin_user_add');
+
+// Registing a visitor
+$app->match('/visitor/registing', "MicroCMS\Controller\HomeController::registingVisitorAction")
+->bind('visitor_registing');
 
 // Edit an existing user
 $app->match('/admin/user/{id}/edit', "MicroCMS\Controller\AdminController::editUserAction")

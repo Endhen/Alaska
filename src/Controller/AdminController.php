@@ -9,6 +9,7 @@ use MicroCMS\Domain\User;
 use MicroCMS\Form\Type\ArticleType;
 use MicroCMS\Form\Type\CommentType;
 use MicroCMS\Form\Type\UserType;
+use MicroCMS\Form\Type\UnknowType;
 
 class AdminController {
 
@@ -40,8 +41,7 @@ class AdminController {
      */
     public function addArticleAction(Request $request, Application $app) {
         $article = new Article();
-        $article->setArticleDate(strftime('%A %d %B %Y, %H:%M'));
-        $article->setPublied(1);
+        
         $articleForm = $app['form.factory']->create(ArticleType::class, $article);
         $articleForm->handleRequest($request);
         
@@ -55,15 +55,15 @@ class AdminController {
     }
     
     /**
-     * Add article controller.
+     * Add sketch controller.
      *
      * @param Request $request Incoming request
      * @param Application $app Silex application
      */
     public function sketchArticleAction(Request $request, Application $app) {
-        $article = new Article();
-        $article->setArticleDate(strftime('%A %d %B %Y, %H:%M'));
-        $articleForm = $app['form.factory']->create(ArticleType::class, $article);
+        //$article = new Article();
+        
+        $articleForm = $app['form.factory']->create(ArticleType::class, Article::class);
         $articleForm->handleRequest($request);
         
         if ($articleForm->isSubmitted() && $articleForm->isValid()) {
@@ -124,6 +124,10 @@ class AdminController {
         $commentForm = $app['form.factory']->create(CommentType::class, $comment);
         $commentForm->handleRequest($request);
         if ($commentForm->isSubmitted() && $commentForm->isValid()) {
+            
+            //reset reports
+            $comment->setReports('as', []);
+            
             $app['dao.comment']->save($comment);
             $app['session']->getFlashBag()->add('success', 'Le commentaire a bien été mis a jour.');
         }
@@ -156,16 +160,10 @@ class AdminController {
         $user = new User();
         $userForm = $app['form.factory']->create(UserType::class, $user);
         $userForm->handleRequest($request);
+        
         if ($userForm->isSubmitted() && $userForm->isValid()) {
-            // generate a random salt value
-            $salt = substr(md5(time()), 0, 23);
-            $user->setSalt($salt);
-            $plainPassword = $user->getPassword();
-            // find the default encoder
-            $encoder = $app['security.encoder.bcrypt'];
-            // compute the encoded password
-            $password = $encoder->encodePassword($plainPassword, $user->getSalt());
-            $user->setPassword($password); 
+            $user->initPassword($app);
+            
             $app['dao.user']->save($user);
             $app['session']->getFlashBag()->add('success', 'L\'utilisateur a bien été créé.');
         }
@@ -186,12 +184,8 @@ class AdminController {
         $userForm = $app['form.factory']->create(UserType::class, $user);
         $userForm->handleRequest($request);
         if ($userForm->isSubmitted() && $userForm->isValid()) {
-            $plainPassword = $user->getPassword();
-            // find the encoder for the user
-            $encoder = $app['security.encoder_factory']->getEncoder($user);
-            // compute the encoded password
-            $password = $encoder->encodePassword($plainPassword, $user->getSalt());
-            $user->setPassword($password); 
+            $user->initPassword($app, 'noSalt');
+            
             $app['dao.user']->save($user);
             $app['session']->getFlashBag()->add('success', 'L\'utilisateur a bien été mis a jour.');
         }

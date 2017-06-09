@@ -32,8 +32,8 @@ class Length extends Constraint
         self::INVALID_CHARACTERS_ERROR => 'INVALID_CHARACTERS_ERROR',
     );
 
-    public $maxMessage = 'This value is too long. It should have {{ limit }} character or less.|This value is too long. It should have {{ limit }} characters or less.';
-    public $minMessage = 'This value is too short. It should have {{ limit }} character or more.|This value is too short. It should have {{ limit }} characters or more.';
+    public $maxMessage = 'Cette valeur est trop grande. Elle ne peut avoir que {{ limit }} charactères ou moins.|Cette valeur est trop grande. Elle ne peut avoir que {{ limit }} charactères ou moins.';
+    public $minMessage = 'Cette valeur est trop petite. Elle doit avoir {{ limit }} charactères ou plus.|Cette valeur est trop petite. Elle doit avoir {{ limit }} charactères ou plus.';
     public $exactMessage = 'This value should have exactly {{ limit }} character.|This value should have exactly {{ limit }} characters.';
     public $charsetMessage = 'This value does not match the expected {{ charset }} charset.';
     public $max;

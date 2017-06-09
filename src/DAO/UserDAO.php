@@ -44,6 +44,23 @@ class UserDAO extends DAO implements UserProviderInterface
         else
             throw new \Exception("No user matching id " . $id);
     }
+    
+    /**
+     * Returns a user matching the supplied name.
+     *
+     * @param integer $name The user name.
+     *
+     * @return \MicroCMS\Domain\User|throws an exception if no matching user is found
+     */
+    public function userExist($name) {
+        $sql = "select * from t_user where usr_name=?";
+        $row = $this->getDb()->fetchAssoc($sql, array($name));
+
+        if ($row)
+            return true;
+        else
+            return false;
+    }
 
     /**
      * Saves a user into the database.
@@ -61,12 +78,16 @@ class UserDAO extends DAO implements UserProviderInterface
         if ($user->getId()) {
             // The user has already been saved : update it
             $this->getDb()->update('t_user', $userData, array('usr_id' => $user->getId()));
+            return true;
+        } elseif($this->userExist($user->getUsername())) {
+            return false;
         } else {
             // The user has never been saved : insert it
             $this->getDb()->insert('t_user', $userData);
             // Get the id of the newly created user and set it on the entity.
             $id = $this->getDb()->lastInsertId();
             $user->setId($id);
+            return true;
         }
     }
 

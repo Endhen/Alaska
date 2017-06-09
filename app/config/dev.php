@@ -6,9 +6,9 @@ $app['db.options'] = array(
     'charset'  => 'utf8',
     'host'     => '127.0.0.1',  // Mandatory for PHPUnit testing
     'port'     => '3306',
-    'dbname'   => 'microcms',
-    'user'     => 'microcms_user',
-    'password' => 'secret',
+    'dbname'   => 'micro_cms',
+    'user'     => 'root',
+    'password' => '',
 );
 
 // enable the debug mode

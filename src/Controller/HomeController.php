@@ -4,9 +4,12 @@ namespace MicroCMS\Controller;
 
 use Silex\Application;
 use Symfony\Component\HttpFoundation\Request;
+use MicroCMS\Domain\User;
 use MicroCMS\Domain\Comment;
 use MicroCMS\Form\Type\CommentType;
 use MicroCMS\Form\Type\ReponseType;
+use MicroCMS\Form\Type\VisitorType;
+
 
 class HomeController {
 
@@ -38,22 +41,10 @@ class HomeController {
             // A user is fully authenticated : he can ...
             
             // ... add reponse
-            $reponse = new Comment();
-            $reponse
-                ->setArticle($article)
-                ->setAuthor($user)
-                ->setReports('as', NULL)
-                ->setCommentDate(date("d/m/Y à H:i"));
+            $reponse = new Comment($article, $user);
             
             // ... add comments
-            $comment = new Comment();
-            $comment
-                ->setArticle($article)
-                ->setAuthor($user)
-                ->setChildOf(0)
-                ->setParentOf(NULL)
-                ->setReports('as', NULL)
-                ->setCommentDate(date("d/m/Y à H:i"));
+            $comment = new Comment($article, $user);
             
             // Fills comment content
             $commentForm = $app['form.factory']->create(CommentType::class, $comment);
@@ -155,5 +146,25 @@ class HomeController {
             'error'         => $app['security.last_error']($request),
             'last_username' => $app['session']->get('_security.last_username'),
         ));
+    }
+    
+    public function registingVisitorAction(Request $request, Application $app) {
+        $user = new User();
+        $userForm = $app['form.factory']->create(VisitorType::class, $user);
+        $userForm->handleRequest($request);
+        
+        if ($userForm->isSubmitted() && $userForm->isValid()) {
+            $user->initPassword($app);
+            
+            if($app['dao.user']->save($user)) {
+                $app['session']->getFlashBag()->add('success', 'L\'utilisateur a bien été créé. Vous pouvez maintenant vous connecter');
+            } else {
+                $app['session']->getFlashBag()->add('warning', 'Ce nom d\'utilisateur existe déjà, veuillez trouver un autre nom d\'utilisateur.');
+            };
+            
+        }
+        return $app['twig']->render('visitor_form.html.twig', array(
+            'title' => 'Inscription',
+            'userForm' => $userForm->createView()));
     }
 }

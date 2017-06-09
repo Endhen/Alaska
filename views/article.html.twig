@@ -25,12 +25,12 @@
 {% if comment.childOf == 0 %}
     <div class="parent comment">
     <p class="com"><strong class="pseudo">{{ comment.author.username }}</strong> à dit le {{ comment.getcommentDate() }} : {{ comment.content }} 
-        {% if is_granted('IS_AUTHENTICATED_FULLY')  and (comment.getReports('reportedBy', user.id) == false) %} 
+        {% if is_granted('IS_AUTHENTICATED_FULLY') and (comment.getReports('reportedBy', user.id) == false) %} 
             <a href="/comment/{{ comment.id }}/report" class="link"> Signaler</a>
+        {% endif %}
         
-            {% if comment.getReports('reportedBy', user.id) %} 
-                <a href="/comment/{{ comment.id }}/cancel-report" class="link"> Annuler mon signalement</a>
-            {% endif %}
+        {% if is_granted('IS_AUTHENTICATED_FULLY') and (comment.getReports('reportedBy', user.id) == true) %} 
+            <a href="/comment/{{ comment.id }}/cancel-report" class="link"> Annuler mon signalement</a>
         {% endif %}
     </p>
     
@@ -79,10 +79,10 @@
             <p class="com"><strong class="pseudo">{{ childComment.author.username }}</strong> à dit le {{ childComment.getcommentDate() }} : {{ childComment.content }} 
                 {% if is_granted('IS_AUTHENTICATED_FULLY') and (childComment.getReports('reportedBy', user.id) == false) %} 
                     <a href="/comment/{{ childComment.id }}/report" class="link"> Signaler</a>
+                {% endif %}
                 
-                    {% if childComment.getReports('reportedBy', user.id) %} 
-                        <a href="/comment/{{ childComment.id }}/cancel-report" class="link"> Annuler mon signalement</a>
-                    {% endif %}
+                {% if is_granted('IS_AUTHENTICATED_FULLY') and (childComment.getReports('reportedBy', user.id) == true) %} 
+                    <a href="/comment/{{ childComment.id }}/cancel-report" class="link"> Annuler mon signalement</a>
                 {% endif %}
             </p>
             
@@ -132,10 +132,10 @@
                 <p class="com"><strong class="pseudo">{{ childCommentII.author.username }}</strong> à dit le {{ childCommentII.getcommentDate() }} : {{ childCommentII.content }} 
                     {% if is_granted('IS_AUTHENTICATED_FULLY') and (childCommentII.getReports('reportedBy', user.id) == false) %} 
                         <a href="/comment/{{ childCommentII.id }}/report" class="link"> Signaler</a>
-
-                        {% if childCommentII.getReports('reportedBy', user.id) %} 
-                            <a href="/comment/{{ childCommentII.id }}/cancel-report" class="link"> Annuler mon signalement</a>
-                        {% endif %}
+                    {% endif %}
+                    
+                    {% if is_granted('IS_AUTHENTICATED_FULLY') and (childCommentII.getReports('reportedBy', user.id) == true) %} 
+                        <a href="/comment/{{ childCommentII.id }}/cancel-report" class="link"> Annuler mon signalement</a>
                     {% endif %}
                 </p> 
                 
@@ -184,10 +184,10 @@
                         <p class="com"><strong class="pseudo">{{ childCommentIII.author.username }}</strong> à dit le {{ childCommentIII.getCommentDate() }} : {{ childCommentIII.content }} 
                             {% if is_granted('IS_AUTHENTICATED_FULLY') and (childCommentIII.getReports('reportedBy', user.id) == false) %} 
                                 <a href="/comment/{{ childCommentIII.id }}/report" class="link"> Signaler</a>
+                            {% endif %}
                             
-                                {% if childCommentIII.getReports('reportedBy', user.id) %} 
-                                    <a href="/comment/{{ childCommentIII.id }}/cancel-report" class="link"> Annuler mon signalement</a>
-                                {% endif %}
+                            {% if is_granted('IS_AUTHENTICATED_FULLY') and (childCommentIII.getReports('reportedBy', user.id) == true) %} 
+                                <a href="/comment/{{ childCommentIII.id }}/cancel-report" class="link"> Annuler mon signalement</a>
                             {% endif %}
                         </p>
                         </div>

@@ -10,7 +10,7 @@ use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Validator\Constraints as Assert;
 
-class UserType extends AbstractType
+class VisitorType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -18,13 +18,13 @@ class UserType extends AbstractType
             ->add('username', TextType::class, array(
                 'invalid_message' => 'Le champ "Nom d\'utilisateur" doit être valide',
                 'required' => true,
-                'label' => 'Nom d\'utilisateur', 
+                'label' => 'Nom d\'utilisateur',
                 'constraints' => array(
                     new Assert\NotBlank(),
                     new Assert\Length(array('min' => 5,
                                            'max' => 20)))))
             ->add('password', RepeatedType::class, array(
-                'type'            => PasswordType::class,
+                'type'            => PasswordType::class, 
                 'invalid_message' => 'Les champs "mot de passe" doivent êtres identiques', 
                 'options'         => array('required' => true), 
                 'first_options'   => array('label' => 'Mot de passe'), 
@@ -32,10 +32,7 @@ class UserType extends AbstractType
                 'constraints' => array(
                     new Assert\NotBlank(),
                     new Assert\Length(array('min' => 5,
-                                           'max' => 20)))))
-            ->add('role', ChoiceType::class, array(
-                'choices' => array('Administrateur' => 'ROLE_ADMIN', 'Utilisateur' => 'ROLE_USER')
-            ));
+                                           'max' => 20)))));
     }
 
     public function getName()

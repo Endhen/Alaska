@@ -2,6 +2,7 @@
 
 namespace MicroCMS\Domain;
 
+use Silex\Application;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 class User implements UserInterface
@@ -40,7 +41,7 @@ class User implements UserInterface
      *
      * @var string
      */
-    private $role;
+    private $role = 'ROLE_USER';
 
     public function getId() {
         return $this->id;
@@ -69,8 +70,26 @@ class User implements UserInterface
     public function getPassword() {
         return $this->password;
     }
-
+    
     public function setPassword($password) {
+        $this->password = $password;
+        return $this;
+    }
+    
+    public function initPassword(Application $app, $option = 'salt') {
+        
+        if($option == 'salt') {
+            // generate a random salt value
+            $salt = substr(md5(time()), 0, 23);
+            $this->setSalt($salt);
+        }
+        
+        $plainPassword = $this->getPassword();
+        // find the encoder for the user
+        $encoder = $app['security.encoder_factory']->getEncoder($this);
+        // compute the encoded password
+        $password = $encoder->encodePassword($plainPassword, $this->getSalt());
+        
         $this->password = $password;
         return $this;
     }

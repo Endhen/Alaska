@@ -87,7 +87,7 @@
                     {% for article in articles %}
                     <tr>
                         <td><a class="articleTitle" href="{{ path('article', { 'id': article.id }) }}">{{ article.title }}</a></td>
-                        <td>{{ article.content | truncate(60) | raw }}</td>
+                        <td>{{ article.content | truncate(60)}}</td>
                         <td>
                             <a href="{{ path('admin_article_edit', { 'id': article.id }) }}" class="btn btn-info btn-xs" title="Editer"><span class="glyphicon glyphicon-edit"></span></a>
                             <button type="button" class="btn btn-danger btn-xs" title="Supprimer" data-toggle="modal" data-target="#articleDialog{{ article.id }}"><span class="glyphicon glyphicon-remove"></span>

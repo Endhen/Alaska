@@ -37,21 +37,21 @@ class Comment
      *
      * @var array
      */
-    private $reports;
+    private $reports = NULL;
     
     /**
      * Store a comment id.
      *
      * @var number id
      */
-    private $childOf;
+    private $childOf = NULL;
     
     /**
      * contain all children comments id.
      *
      * @var array of \MicroCMS\Domain\Comment
      */
-    private $parentOf;
+    private $parentOf = NULL;
     
     /**
      * Date of creation.
@@ -60,6 +60,11 @@ class Comment
      */
     private $commentDate;
     
+    function __construct($article = NULL, $user = NULL) {
+        $this->setCommentDate(date("d/m/Y à H:i"))
+            ->setArticle($article)
+            ->setAuthor($user);
+    }
 
     public function getId() {
         return $this->id;
@@ -74,7 +79,7 @@ class Comment
         return $this->author;
     }
 
-    public function setAuthor(User $author) {
+    public function setAuthor($author) {
         $this->author = $author;
         return $this;
     }
@@ -92,7 +97,7 @@ class Comment
         return $this->article;
     }
 
-    public function setArticle(Article $article) {
+    public function setArticle($article) {
         $this->article = $article;
         return $this;
     }
