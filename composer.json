@@ -5,7 +5,7 @@
         "twig/twig": "~1.28",
         "symfony/twig-bridge": "~2.8|3.0.*",
         "symfony/asset": "~2.8|3.0.*",
-        "symfony/security": "~2.8|3.0.*",
+        "symfony/security": "^3.4.48",
         "symfony/form": "~2.8|3.0.*",
         "symfony/translation": "~2.8|3.0.*",
         "symfony/config": "~2.8|3.0.*",
